@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  app:
+    image: ghcr.io/kimeunsur/birthday-hansang:latest  # GHCR 실제 경로로 변경
+    container_name: birthday-app
+    env_file:
+      - .env       # 서버에만 존재(이미지에 비밀정보 미포함)
+    ports:
+      - "8080:8080"  # 앱이 8080 사용한다고 가정
+    restart: always
+
+    # (선택) 헬스체크: curl 설치 필요(아래 Dockerfile 참고)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M

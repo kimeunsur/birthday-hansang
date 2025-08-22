@@ -1,24 +1,27 @@
-# Dockerfile.dev : CI 빌드용
-
-# 1단계: Gradle 빌드 단계
+# ---- Build stage ----
 FROM gradle:8.4.0-jdk17 AS builder
 WORKDIR /app
 
-# Gradle 캐시 최적화
+# 캐시 최적화: 먼저 빌드 스크립트/래퍼만
 COPY build.gradle settings.gradle ./
 COPY gradle ./gradle
-RUN gradle build -x test || return 0
+COPY gradlew gradlew
+RUN ./gradlew --version >/dev/null || true
 
-# 전체 소스 복사 후 빌드
+# 소스 복사 후 빌드
 COPY . .
-RUN gradle clean build -x test
+RUN ./gradlew clean build -x test
 
-# 2단계: 실행용 이미지
+# ---- Runtime stage ----
 FROM amazoncorretto:17
 WORKDIR /app
 
-# jar 복사
+# (헬스체크용) curl 설치
+RUN yum -y install curl && yum clean all
+
+
+# JAR 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
 
-# EC2에서는 application.yml 따로 쓰므로 포함 X
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

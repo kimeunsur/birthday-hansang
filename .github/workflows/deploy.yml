@@ -32,7 +32,7 @@ jobs:
           docker push ${IMAGE}:latest
 
       # 서버에서 새 이미지 pull + 컨테이너 교체
-      - name: Deploy on EC2
+      - name: Deploy on EC2 (compose)
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -40,10 +40,8 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             set -e
-            IMAGE=${IMAGE}
-            # 최신 이미지 pull
-            docker pull $IMAGE:latest
-            # 기존 컨테이너 있으면 종료 및 제거
-            docker ps -q --filter "name=birthday-app" | grep -q . && docker stop birthday-app && docker rm birthday-app || true
-            # 새 컨테이너 실행 (포트, env 필요 시 조정)
-            docker run -d --name birthday-app -p 8080:8080 --env-file ~/birthday-hansang/.env $IMAGE:latest
+            cd /home/ec2-user/BirthDay-HanSang
+            docker compose -f docker-compose.yml pull
+            docker compose -f docker-compose.yml up -d --remove-orphans
+            docker image prune -f || true
+

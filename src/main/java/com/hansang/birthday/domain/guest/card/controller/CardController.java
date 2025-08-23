@@ -17,7 +17,6 @@ public class CardController {
                                         @RequestBody CardRequest cardRequest) {
         cardService.registerCard(birthdayId,cardRequest);
         return ResponseEntity.ok().build();
-
     }
 
 

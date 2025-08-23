@@ -1,6 +1,6 @@
 package com.hansang.birthday.domain.birthday.domain;
 
-import com.hansang.birthday.domain.quiz.domain.repository.Quiz;
+import com.hansang.birthday.domain.quiz.domain.Quiz;
 import com.hansang.birthday.domain.user.domain.User;
 import com.hansang.birthday.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ public class Birthday extends BaseEntity {
     private Boolean quizEntry;
     @Column(name = "is_open")
     private Boolean isOpen;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "birthday", cascade = CascadeType.ALL, orphanRemoval = true)
     private Quiz quiz;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -42,6 +42,10 @@ public class Birthday extends BaseEntity {
     public static Birthday of (Integer year, User user) {
         return new Birthday(null, year, null, null, user);
     }
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }

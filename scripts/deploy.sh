@@ -1,29 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 REPOSITORY=/home/ec2-user/birthday-hansang
-cd $REPOSITORY
+cd "$REPOSITORY"
 
-CONTAINER_NAME="birthday-hansang-server"
-IMAGE_NAME="birthday-hansang-image"
-JAR_NAME=$(ls $REPOSITORY/build/libs/*.jar | grep -v plain | head -n 1)
-SPRING_PROFILE="prod"
+COMPOSE_FILE="$REPOSITORY/docker-compose.yml"
 
-echo "> 기존 컨테이너 중지 및 삭제"
-docker stop $CONTAINER_NAME 2>/dev/null || true
-docker rm $CONTAINER_NAME 2>/dev/null || true
+# (프라이빗 이미지면 필요) GHCR 로그인
+# echo "<PAT>" | docker login ghcr.io -u <USER> --password-stdin
 
-echo "> 기존 이미지 삭제"
-docker rmi $IMAGE_NAME 2>/dev/null || true
+echo "> Pull latest image"
+docker compose -f "$COMPOSE_FILE" pull
 
-echo "> Dockerfile 기준 이미지 빌드"
-docker build -t $IMAGE_NAME .
+echo "> Recreate container"
+docker compose -f "$COMPOSE_FILE" up -d --remove-orphans
 
-echo "> Docker 컨테이너 실행"
-docker run -d \
-  --name $CONTAINER_NAME \
-  -p 8081:8081 \
-  --restart always \
-  -v /etc/localtime:/etc/localtime:ro \
-  -e TZ=Asia/Seoul \
-  $IMAGE_NAME \
-  --spring.profiles.active=$SPRING_PROFILE
+echo "> Cleanup old images"
+docker image prune -f || true
+
+echo "✅ Deploy done"

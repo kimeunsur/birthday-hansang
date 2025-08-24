@@ -1,6 +1,7 @@
 package com.hansang.birthday.global.config;
 
 import com.hansang.birthday.domain.auth.jwt.JwtAuthenticationFilter;
+import com.hansang.birthday.domain.auth.security.CustomJwtAuthenticationConverter;
 import com.hansang.birthday.global.security.exception.CustomAccessDeniedHandler;
 import com.hansang.birthday.global.security.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
 
     private final String[] AUTH_WHITELIST = {
             // swagger 관련
@@ -32,7 +33,6 @@ public class SecurityConfig {
             //kakao로그인 관련
             "/api/users/login/oauth/kakao/**","/api/users/login/oauth/kakao"
     };
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -44,21 +44,26 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                .formLogin((form) -> form.disable())
+                .formLogin(form -> form.disable())
                 .httpBasic(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers("/api-guest/**").hasRole("GUEST")
+                        .requestMatchers("/api-user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
 
-                .exceptionHandling((exceptionHandling) -> exceptionHandling
+                .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
+                .oauth2ResourceServer(oauth -> oauth
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter))
+                )
                 .build();
     }
+
 }
+

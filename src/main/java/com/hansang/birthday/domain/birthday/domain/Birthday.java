@@ -30,17 +30,20 @@ public class Birthday extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @Column(nullable = false)
+    private String code;
 
     @Builder
-    public Birthday (Boolean brandGiftEntry, Integer year, Boolean quizEntry, Boolean isOpen, User user) {
+    public Birthday (Boolean brandGiftEntry, Integer year, Boolean quizEntry, Boolean isOpen, User user, String code) {
         this.brandGiftEntry = brandGiftEntry == null ? false : brandGiftEntry;
         this.year = year;
         this.quizEntry = quizEntry ==null ? false : quizEntry;
         this.isOpen = isOpen == null ? false : isOpen;
         this.user = user;
+        this.code = code;
     }
-    public static Birthday of (Integer year, User user) {
-        return new Birthday(null, year, null, null, user);
+    public static Birthday of (Integer year, User user, String code) {
+        return new Birthday(null, year, null, null, user, code);
     }
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;

@@ -13,9 +13,11 @@ public class AuthTokensGenerator {
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60; //1시간
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
+    private static final long GUEST_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;  // 1일
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    //=============유저용=============
     public AuthTokens generate(String userId) {
         long now = new Date().getTime();
         Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
@@ -32,5 +34,12 @@ public class AuthTokensGenerator {
         Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = jwtTokenProvider.accessTokenGenerate(userId, accessTokenExpiredAt);
         return AuthTokens.create(accessToken,null,BEARER_TYPE,ACCESS_TOKEN_EXPIRE_TIME / 1000L);
+    }
+    //=============게스트용=============
+    public AuthTokens generateGuestToken(String guestId,String nickname, Long birthdayId) {
+        long now = new Date().getTime();
+        Date accessTokenExpiredAt = new Date(now + GUEST_TOKEN_EXPIRE_TIME);
+        String guestToken = jwtTokenProvider.generateGuestToken(guestId,nickname,birthdayId, accessTokenExpiredAt);
+        return AuthTokens.create(guestToken,null,BEARER_TYPE,GUEST_TOKEN_EXPIRE_TIME / 1000L);
     }
 }

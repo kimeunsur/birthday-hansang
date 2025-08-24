@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    //private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
 
     private final String[] AUTH_WHITELIST = {
@@ -50,7 +49,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers("/api-guest/auth/exchange").permitAll()
                         .requestMatchers("/api-guest/**").hasRole("GUEST")
                         .requestMatchers("/api-user/**").hasRole("USER")
                         .anyRequest().authenticated()

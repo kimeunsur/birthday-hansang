@@ -49,6 +49,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers("/api-guest/auth/exchange").permitAll()
                         .requestMatchers("/api-guest/**").hasRole("GUEST")
                         .requestMatchers("/api-user/**").hasRole("USER")
                         .anyRequest().authenticated()

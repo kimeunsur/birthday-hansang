@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @Service
@@ -29,8 +30,9 @@ public class BirthdayService {
         if (birthdayRepository.existsByUserAndYear(user, year)) {
             throw new BirthdayException(ErrorCode.BIRTHDAY_ALREADY_EXISTS);
         }
-        Birthday birthday = Birthday.of(year, user);
+        String code = UUID.randomUUID().toString();
+        Birthday birthday = Birthday.of(year, user, code);
         birthdayRepository.save(birthday);
-        return BirthdayResponse.of(user.getUserId(), birthday.getId());
+        return BirthdayResponse.of(user.getUserId(), birthday);
     }
 }

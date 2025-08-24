@@ -17,9 +17,13 @@ public class Image extends BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String url;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ImageType type;
     @Builder
-    public Image(String url) {
+    public Image(String url, ImageType type) {
+
         this.url = url;
+        this.type = type;
     }
 }

@@ -44,7 +44,7 @@ public class User {
     private String refreshToken;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Birthday> birthdays = new ArrayList<>();
+    private List<Birthday> birthdayCardList = new ArrayList<>();
 
     @Builder
     public User(String name, String profileImageUrl, Long kakaoId,LocalDate birthday) {

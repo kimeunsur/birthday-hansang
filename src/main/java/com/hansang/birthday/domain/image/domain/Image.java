@@ -1,11 +1,15 @@
 package com.hansang.birthday.domain.image.domain;
 
+import com.hansang.birthday.domain.card.domain.BirthdayCard;
 import com.hansang.birthday.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,6 +21,8 @@ public class Image extends BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String url;
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BirthdayCard> birthdayCardList = new ArrayList<>();
 
     @Builder
     public Image(String url) {

@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -18,10 +19,11 @@ public class JwtTokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
-
+    //=============유저용=============
     public String accessTokenGenerate(String subject, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject) //id
+                .claim("role", "USER")
                 .setExpiration(expiredAt)
                 .signWith(this.key, SignatureAlgorithm.HS256)
                 .compact();
@@ -30,6 +32,18 @@ public class JwtTokenProvider {
 
     public String refreshTokenGenerate(Date expiredAt) {
         return Jwts.builder()
+                .setExpiration(expiredAt)
+                .signWith(this.key, SignatureAlgorithm.HS256)
+                .compact();
+
+    }
+    //=============게스트용=============
+    public String generateGuestToken(String guestId, String nickname, Long birthdayId, Date expiredAt) {
+        return Jwts.builder()
+                .setSubject(guestId) // JWT 표준 claim
+                .claim("nickname", nickname)
+                .claim("birthdayId", birthdayId)
+                .claim("role", "GUEST")
                 .setExpiration(expiredAt)
                 .signWith(this.key, SignatureAlgorithm.HS256)
                 .compact();

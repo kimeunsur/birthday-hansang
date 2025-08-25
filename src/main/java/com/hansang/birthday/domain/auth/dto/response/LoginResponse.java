@@ -1,4 +1,4 @@
-package com.hansang.birthday.domain.auth.dto;
+package com.hansang.birthday.domain.auth.dto.response;
 
 
 import com.hansang.birthday.domain.auth.tokens.AuthTokens;

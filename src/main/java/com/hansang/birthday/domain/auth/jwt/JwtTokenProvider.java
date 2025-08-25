@@ -50,6 +50,7 @@ public class JwtTokenProvider {
 
     }
 
+    // ============= 공통 유틸 =============
     public boolean validateToken(String token) {
         try{
             Jwts.parserBuilder()

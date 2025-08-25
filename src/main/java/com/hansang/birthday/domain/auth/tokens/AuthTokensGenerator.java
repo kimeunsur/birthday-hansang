@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -13,7 +14,7 @@ public class AuthTokensGenerator {
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60; //1시간
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
-    private static final long GUEST_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;  // 1일
+    private static final long GUEST_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;  // 1일
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -36,7 +37,8 @@ public class AuthTokensGenerator {
         return AuthTokens.create(accessToken,null,BEARER_TYPE,ACCESS_TOKEN_EXPIRE_TIME / 1000L);
     }
     //=============게스트용=============
-    public AuthTokens generateGuestToken(String guestId,String nickname, Long birthdayId) {
+    public AuthTokens generateGuestToken(String nickname, Long birthdayId) {
+        String guestId = UUID.randomUUID().toString();
         long now = new Date().getTime();
         Date accessTokenExpiredAt = new Date(now + GUEST_TOKEN_EXPIRE_TIME);
         String guestToken = jwtTokenProvider.generateGuestToken(guestId,nickname,birthdayId, accessTokenExpiredAt);

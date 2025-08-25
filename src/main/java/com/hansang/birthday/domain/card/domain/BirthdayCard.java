@@ -33,4 +33,7 @@ public class BirthdayCard extends BaseEntity {
         this.image = image;
         this.birthday = birthday;
     }
+    public static BirthdayCard of(String nickName, String message, Image image, Birthday birthday) {
+        return new BirthdayCard(nickName, message, image, birthday);
+    }
 }

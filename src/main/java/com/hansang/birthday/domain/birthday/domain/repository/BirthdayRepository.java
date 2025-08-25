@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface BirthdayRepository extends JpaRepository<Birthday, Long> {
     Boolean existsByUserAndYear(User user, Integer year);
     Optional<Birthday> findByUserAndYear(User user, Integer year);
+    Optional<Birthday> findByCode(String code);
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hansang.birthday.domain.auth.tokens.AuthTokens;
 import com.hansang.birthday.domain.auth.tokens.AuthTokensGenerator;
 import com.hansang.birthday.domain.user.domain.User;
-import com.hansang.birthday.domain.auth.dto.LoginResponse;
+import com.hansang.birthday.domain.auth.dto.response.LoginResponse;
 import com.hansang.birthday.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 

@@ -3,9 +3,11 @@ package com.hansang.birthday.domain.auth.controller;
 import com.hansang.birthday.domain.auth.service.AuthService;
 import com.hansang.birthday.domain.auth.tokens.AuthTokens;
 import com.hansang.birthday.domain.auth.tokens.TokenCookieUtil;
-import com.hansang.birthday.domain.auth.dto.LoginResponse;
+import com.hansang.birthday.domain.auth.dto.response.LoginResponse;
 import com.hansang.birthday.domain.auth.service.KakaoService;
+import com.hansang.birthday.domain.auth.userdetail.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,6 +32,7 @@ public class AuthController {
     private final KakaoService kakaoService;
     private final AuthService authService;
 
+    @Operation(summary = "카카오 API")
     @GetMapping("/api/users/login/oauth/kakao")
     public ResponseEntity<LoginResponse> kakaoLogin(@RequestParam String code,
                                                     HttpServletRequest request) {
@@ -63,11 +67,11 @@ public class AuthController {
 
     @Hidden
     @GetMapping("api/auth/test")
-    public String test(){
+    public String test(@AuthenticationPrincipal CustomUserDetails user) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("auth: {}", auth);
+        log.info("user:{}",user.getAuthorities());
         return "hello,world!";
     }
-
 
 }

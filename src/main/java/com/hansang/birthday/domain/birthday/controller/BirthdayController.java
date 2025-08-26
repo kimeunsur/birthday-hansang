@@ -8,9 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +22,16 @@ public class BirthdayController {
     public ResponseEntity<BirthdayResponse> createBirthday(
             @AuthenticationPrincipal CustomUserDetails user) {
         BirthdayResponse response = birthdayService.createBirthday(user.getUserId());
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "이번년도 생일상 조회 API")
+    @GetMapping("/get/this-year/{birthdayId}")
+    public ResponseEntity<BirthdayResponse> getBirthday(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @PathVariable("birthdayId") Long birthdayId
+    ) {
+        BirthdayResponse response = birthdayService.getBirthdayInfo(user.getUserId(), birthdayId);
         return ResponseEntity.ok(response);
     }
 

@@ -26,7 +26,7 @@ public class BirthdayService {
     public BirthdayResponse createBirthday(Long userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-        int year = LocalDate.now().getYear();
+        Integer year = LocalDate.now().getYear();
         if (birthdayRepository.existsByUserAndYear(user, year)) {
             throw new BirthdayException(ErrorCode.BIRTHDAY_ALREADY_EXISTS);
         }
@@ -34,5 +34,14 @@ public class BirthdayService {
         Birthday birthday = Birthday.of(year, user, code);
         birthdayRepository.save(birthday);
         return BirthdayResponse.of(user.getUserId(), birthday);
+    }
+
+    public BirthdayResponse getBirthdayInfo(Long userId, Long birthdayId) {
+        Integer year = LocalDate.now().getYear();
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        Birthday birthday = birthdayRepository.findByUserAndYear(user, year)
+                .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
+        return BirthdayResponse.of(userId, birthday);
     }
 }

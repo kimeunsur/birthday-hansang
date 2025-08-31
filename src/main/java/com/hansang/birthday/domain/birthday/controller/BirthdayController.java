@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api-user/birthday")
@@ -20,7 +22,8 @@ public class BirthdayController {
     @Operation(summary = "생일상 생성 API")
     @PostMapping("/create")
     public ResponseEntity<BirthdayResponse> createBirthday(
-            @AuthenticationPrincipal CustomUserDetails user) {
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
         BirthdayResponse response = birthdayService.createBirthday(user.getUserId());
         return ResponseEntity.ok(response);
     }
@@ -35,5 +38,13 @@ public class BirthdayController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "생일상 전체 조회 API")
+    @GetMapping("/get/all")
+    public ResponseEntity<List<BirthdayResponse>> getBirthday(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        List<BirthdayResponse> response = birthdayService.getAllBirthdays(user.getUserId());
+        return ResponseEntity.ok(response);
+    }
 
 }

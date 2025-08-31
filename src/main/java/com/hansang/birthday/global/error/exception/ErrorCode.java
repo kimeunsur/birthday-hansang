@@ -17,6 +17,7 @@ public enum ErrorCode {
     BIRTHDAY_ALREADY_EXISTS(409, "B001", "생일상이 이미 존재합니다"),
     BIRTHDAY_NOT_FOUND(400, "B002", "생일상을 찾을 수 없습니다"),
     UNAUTHORIZED_BIRTHDAY_ACCESS(400, "B003", "생일상 주인이 아닙니다"),
+    EXPIRED_BIRTHDAY_ACCESS(400, "B004", "생일상 열람이 열리지 않았습니다"),
     // QUIZ
     QUIZ_ALREADY_EXISTS(409, "Q001", "퀴즈가 이미 존재합니다"),
     QUESTION_NOT_FOUND(404, "Q002", "문항을 찾을 수 없습니다");

@@ -31,6 +31,7 @@ public class SecurityConfig {
             //h2관련
             "/h2/**",
             //kakao로그인 관련
+            "/api/auth/guest",
             "/api/users/login/oauth/kakao/**","/api/users/login/oauth/kakao"
     };
     @Bean

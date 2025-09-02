@@ -1,7 +1,7 @@
 package com.hansang.birthday.domain.birthday.dto.response;
 
 import com.hansang.birthday.domain.birthday.domain.Birthday;
-import com.hansang.birthday.domain.card.domain.BirthdayCard;
+import com.hansang.birthday.domain.card.dto.response.BirthdayCardResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,14 +15,17 @@ public class BirthdayResponse {
     private Long userId;
     private Long birthdayId;
     private String code;
-    private List<BirthdayCard> birthdayCards;
+    private List<BirthdayCardResponse> birthdayCards;
 
     public static BirthdayResponse of (Long userId, Birthday birthday) {
         return BirthdayResponse.builder()
                 .userId(userId)
                 .birthdayId(birthday.getId())
                 .code(birthday.getCode())
-                .birthdayCards(birthday.getBirthdayCards())
+                .birthdayCards(
+                        birthday.getBirthdayCards().stream()
+                                .map(BirthdayCardResponse::of)
+                                .toList())
                 .build();
     }
 }

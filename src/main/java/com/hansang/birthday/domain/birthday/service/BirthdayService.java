@@ -44,4 +44,12 @@ public class BirthdayService {
                 .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
         return BirthdayResponse.of(userId, birthday);
     }
+
+    public BirthdayResponse getBirthdayInfoByBirthdayId(Long birthdayId) {
+        Birthday birthday = birthdayRepository.findById(birthdayId)
+                .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
+        if(!birthday.getIsOpen()) throw new BirthdayException(ErrorCode.EXPIRED_BIRTHDAY_ACCESS);
+        return BirthdayResponse.of(birthday.getUser().getUserId(), birthday);
+    }
+
 }

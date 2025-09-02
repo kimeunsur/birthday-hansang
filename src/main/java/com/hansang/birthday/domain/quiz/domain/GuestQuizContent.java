@@ -12,6 +12,7 @@ public class GuestQuizContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guestQuizContentId;
 
+
     private boolean choice;
     private boolean isCorrect;
 

@@ -14,9 +14,11 @@ public class GuestQuiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guestQuizId;
 
+    @Column(nullable = false)
     private String nickname;
 
-    private Integer score;
+    @Column(nullable = false)
+    private Integer score=0;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quiz_id",nullable = false)

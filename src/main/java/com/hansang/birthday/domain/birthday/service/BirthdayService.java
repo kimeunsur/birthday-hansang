@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -44,7 +45,7 @@ public class BirthdayService {
                 .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
         return BirthdayResponse.of(userId, birthday);
     }
-
+  
     public BirthdayResponse getBirthdayInfoByBirthdayId(Long birthdayId) {
         Birthday birthday = birthdayRepository.findById(birthdayId)
                 .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
@@ -52,4 +53,12 @@ public class BirthdayService {
         return BirthdayResponse.of(birthday.getUser().getUserId(), birthday);
     }
 
+    public List<BirthdayResponse> getAllBirthdays(Long userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        List<Birthday> birthdays = birthdayRepository.findAllByUser(user);
+        return birthdays.stream()
+                .map(birthday -> BirthdayResponse.of(userId, birthday))
+                .toList();
+    }
 }

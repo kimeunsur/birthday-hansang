@@ -47,5 +47,4 @@ application-*.ymlsrc/main/resources/application.properties
 
 ### env ###
 .env
-/src/main/java/com/hansang/birthday/domain/guest
-
+/src/test

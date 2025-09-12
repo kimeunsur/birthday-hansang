@@ -1,5 +1,7 @@
 package com.hansang.birthday.domain.auth.jwt;
 
+import com.hansang.birthday.global.error.exception.BusinessException;
+import com.hansang.birthday.global.error.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -57,31 +59,11 @@ public class JwtTokenProvider {
                     .setSigningKey(this.key)
                     .build()
                     .parseClaimsJws(token);
-            log.info("JWT token validated");
             return true;
-        }catch(SecurityException | MalformedJwtException e){
-            log.warn("잘못된 JWT 서명입니다.");
-        }catch(ExpiredJwtException e){
-            log.warn("만료된 토큰입니다.");
-        }catch(UnsupportedJwtException e){
-            log.warn("지원하지 않는 토큰입니다.");
-        }catch(IllegalArgumentException e){
-            log.warn("잘못된 토큰입니다.");
-        }
-        return false;
-    }
-    public String getUserIdFromToken(String token) {
-        try{
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(this.key)
-                    .build()
-                    .parseClaimsJws(token).getBody();
-            return claims.getSubject();
-        }catch (ExpiredJwtException e) {
-            return e.getClaims().getSubject();
+        }catch(SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
+               IllegalArgumentException e){
+            throw new BusinessException(ErrorCode.WRONG_REFRESH_TOKEN);
         }
     }
-
-
 
 }

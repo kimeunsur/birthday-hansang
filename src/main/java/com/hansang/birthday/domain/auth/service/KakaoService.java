@@ -3,11 +3,7 @@ package com.hansang.birthday.domain.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hansang.birthday.domain.auth.tokens.AuthTokens;
-import com.hansang.birthday.domain.auth.tokens.AuthTokensGenerator;
-import com.hansang.birthday.domain.user.domain.User;
 import com.hansang.birthday.domain.auth.dto.response.LoginResponse;
-import com.hansang.birthday.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,15 +20,12 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Optional;
 
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class KakaoService {
-    private final UserRepository userRepository;
-    private final AuthTokensGenerator authTokensGenerator;
 
     @Value("${KAKAO_CLIENT_ID}")
     private String kakaoClientId;
@@ -40,10 +33,13 @@ public class KakaoService {
     @Value("${kakao.redirect-uri}")
     private String kakaoRedirectUri;
 
+    private final AuthService authService;
+
     public LoginResponse kakaoLogin(String code) {
         String accessToken = getAccessToken(code);
         HashMap<String, Object> userInfo = getKakaoUserInfo(accessToken);
-        return login(userInfo);
+        HashMap<String, Object> userInfo_addProfile = getKakaoUserInfo_profile(accessToken, userInfo);
+        return authService.login(userInfo_addProfile);
     }
 
     private String getAccessToken(String code){
@@ -95,13 +91,12 @@ public class KakaoService {
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
+                HttpMethod.GET,
                 kakaoUserInfoRequest,
                 String.class
         );
         //responseBody에 있는 정보 꺼내기
         String responseBody = response.getBody();
-        //log.info("responseBody: {}", responseBody);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = null;
         try {
@@ -115,7 +110,7 @@ public class KakaoService {
         JsonNode profile = kakaoAccount.get("profile");
         Long kakaoId = jsonNode.get("id").asLong();
         String name = profile.get("nickname").asText();
-        String profileImageUrl = profile.get("profile_image_url").asText();
+        //String profileImageUrl = profile.get("profile_image_url").asText();
         String birthday = kakaoAccount.get("birthday").asText();
         String birthyear = kakaoAccount.get("birthyear").asText();
 
@@ -123,10 +118,41 @@ public class KakaoService {
 
         userInfo.put("kakaoId", kakaoId);
         userInfo.put("name", name);
-        userInfo.put("profileImageUrl", profileImageUrl);
+        /* userInfo.put("profileImageUrl", profileImageUrl); */
         userInfo.put("birthday", birthDate);
 
         return userInfo;
+    }
+
+    private HashMap<String, Object> getKakaoUserInfo_profile(String accessToken,HashMap<String, Object> userInfo) {
+        //HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        //HTTP 요청 보내기
+        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<String> response = rt.exchange(
+                "https://kapi.kakao.com/v1/api/talk/profile",
+                HttpMethod.GET,
+                kakaoUserInfoRequest,
+                String.class
+        );
+        //responseBody에 있는 정보 꺼내기
+        String responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(responseBody);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        String profileImageUrl = jsonNode.get("profileImageURL").asText();
+        userInfo.put("profileImageUrl", profileImageUrl);
+        return userInfo;
+
     }
 
     private LocalDate makeBirthDate(String birthyear, String birthday) {
@@ -136,26 +162,6 @@ public class KakaoService {
     }
 
 
-    private LoginResponse login(HashMap<String, Object> userInfo) {
-        User user;
-        Long kakaoId = Long.valueOf(userInfo.get("kakaoId").toString());
-        String name = userInfo.get("name").toString();
-        String profileImageUrl = userInfo.get("profileImageUrl").toString();
-        LocalDate birthday = (LocalDate) userInfo.get("birthday");
 
-        Optional<User> findUser = userRepository.findByKakaoId(kakaoId);
-        if (findUser.isEmpty()) {
-            user = new User(name, profileImageUrl, kakaoId, birthday);
-            user= userRepository.save(user);
-        }
-        else{
-            user = findUser.get();
-        }
-        Long userId = user.getUserId();
-        AuthTokens token = authTokensGenerator.generate(userId.toString());
-        user.setRefreshToken(token.getRefreshToken());
-        userRepository.save(user);
-        return new LoginResponse(userId, token);
-    }
 
 }

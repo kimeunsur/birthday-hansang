@@ -19,12 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public  class GuestQuizController {
     private final GuestQuizService guestQuizService;
-    //방문자 퀴즈 랭킹 보기 api 추가하기
-
-
-
-    //guest 퀴즈 문항 보기 api 추가하기
-
 
     @Operation(summary = "게스트 퀴즈 결과 등록 API")
     @PostMapping("/submit")
@@ -38,8 +32,4 @@ public  class GuestQuizController {
         GuestQuizResultResponse response = guestQuizService.registerQuiz(nickname, quizId, guestQuizRequest);
         return ResponseEntity.ok(response);
     }
-
-    //guest 퀴즈 결과 보기 api 추가하기
-
-
 }

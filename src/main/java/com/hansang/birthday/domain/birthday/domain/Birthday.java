@@ -21,7 +21,7 @@ public class Birthday extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "birthday_id")
     private Long id;
-    @Column(nullable = false)
+    @Column(name = "birth_year", nullable = false)
     private Integer year;
     @Column(name = "brand_gift_entry")
     private Boolean brandGiftEntry;

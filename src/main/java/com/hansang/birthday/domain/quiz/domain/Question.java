@@ -14,7 +14,7 @@ public class Question extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
     @Column(nullable = false)

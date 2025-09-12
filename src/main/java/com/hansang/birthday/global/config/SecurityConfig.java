@@ -1,6 +1,5 @@
 package com.hansang.birthday.global.config;
 
-import com.hansang.birthday.domain.auth.jwt.JwtAuthenticationFilter;
 import com.hansang.birthday.domain.auth.security.CustomJwtAuthenticationConverter;
 import com.hansang.birthday.global.security.exception.CustomAccessDeniedHandler;
 import com.hansang.birthday.global.security.exception.CustomAuthenticationEntryPoint;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity

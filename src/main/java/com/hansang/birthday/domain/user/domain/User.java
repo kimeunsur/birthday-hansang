@@ -15,8 +15,8 @@ import java.util.List;
 
 @Entity
 @Table(name="users")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor
 @Builder
 public class User {
     @Id
@@ -34,10 +34,10 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @NotEmpty
+    @Column(nullable = false, unique = true)
     private Long kakaoId;
 
-    @NotEmpty
+    @Column(nullable = false)
     private LocalDate birthday;
 
     @Column(length = 512)
@@ -54,6 +54,26 @@ public class User {
         this.kakaoId = kakaoId;
         this.birthday = birthday;
     }
+    public static User of(Long kakaoId, String name, String profileImageUrl, LocalDate birthday) {
+        return User.builder()
+                .kakaoId(kakaoId)
+                .name(name)
+                .profileImageUrl(profileImageUrl)
+                .birthday(birthday)
+                .build();
+    }
+    public void updateUser(String name, String profileImageUrl, LocalDate birthday) {
+        this.name = name;
+        this.profileImageUrl = profileImageUrl;
+        this.birthday = birthday;
+    }
 
+    public void deleteRefreshToken() {
+        this.refreshToken = null;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
 }

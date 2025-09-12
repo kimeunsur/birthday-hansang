@@ -5,6 +5,7 @@ import com.hansang.birthday.domain.quiz.dto.response.GuestQuizResultResponse;
 import com.hansang.birthday.domain.quiz.service.GuestQuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,11 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public  class GuestQuizController {
     private final GuestQuizService guestQuizService;
+    //방문자 퀴즈 랭킹 보기 api 추가하기
 
-    //    @GetMapping
-    //    public ResponseEntity<QuizResultResponse> getQuiz(@PathVariable int quizId) {
-    //        //quizService에서 나온 get으로 보내기
-    //    }
+
+
+    //guest 퀴즈 문항 보기 api 추가하기
+
+
     @Operation(summary = "게스트 퀴즈 결과 등록 API")
     @PostMapping("/submit")
     public ResponseEntity<GuestQuizResultResponse> submit(
@@ -30,9 +33,13 @@ public  class GuestQuizController {
             @Parameter(description = "게스트 퀴즈 풀이 내용 등록할 퀴즈 문항 식별 id")
             @PathVariable Long quizId,
             @Parameter(description = "게스트 퀴즈 풀이 내용")
-            @RequestBody List<GuestQuestionRequest> guestQuizRequest) {
+            @RequestBody @Valid List<GuestQuestionRequest> guestQuizRequest) {
         String nickname = jwt.getClaim("nickname");
         GuestQuizResultResponse response = guestQuizService.registerQuiz(nickname, quizId, guestQuizRequest);
         return ResponseEntity.ok(response);
     }
+
+    //guest 퀴즈 결과 보기 api 추가하기
+
+
 }

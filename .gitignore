@@ -47,3 +47,4 @@ application-*.ymlsrc/main/resources/application.properties
 
 ### env ###
 .env
+/src/test

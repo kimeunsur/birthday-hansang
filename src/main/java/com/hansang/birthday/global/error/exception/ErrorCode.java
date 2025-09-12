@@ -11,6 +11,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500, "C004", "Server Error"),
     INVALID_TYPE_VALUE(400, "C005", " Invalid Type Value"),
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
+    WRONG_REFRESH_TOKEN(400, "C007", "Wrong Refresh Token"),
     // USER
     USER_NOT_FOUND(400, "U001", "유저를 찾을 수 없습니다"),
     // BIRTHDAY

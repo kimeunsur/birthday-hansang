@@ -9,6 +9,7 @@ import com.hansang.birthday.domain.user.exception.UserException;
 import com.hansang.birthday.domain.user.repository.UserRepository;
 import com.hansang.birthday.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,5 +61,11 @@ public class BirthdayService {
         return birthdays.stream()
                 .map(birthday -> BirthdayResponse.of(userId, birthday))
                 .toList();
+    }
+
+    public void deleteBirthday(Long birthdayId) {
+        Birthday birthday = birthdayRepository.findById(birthdayId)
+                .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
+        birthdayRepository.deleteById(birthdayId);
     }
 }

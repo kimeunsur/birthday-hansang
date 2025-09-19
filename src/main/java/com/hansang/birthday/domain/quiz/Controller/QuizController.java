@@ -39,5 +39,14 @@ public class QuizController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "퀴즈 문항 조회 API")
+    @GetMapping("/get/{quizId}")
+    public ResponseEntity<QuizResponse> getQuiz (
+            @Parameter(description = "조회할 퀴즈 문항 식별 id")
+            @PathVariable("quizId") Long quizId
+    ) {
+        QuizResponse response = quizService.getQuiz(quizId);
+        return ResponseEntity.ok(response);
+    }
 
 }

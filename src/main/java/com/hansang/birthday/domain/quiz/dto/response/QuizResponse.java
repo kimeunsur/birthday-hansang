@@ -27,4 +27,12 @@ public class QuizResponse {
                 )
                 .build();
     }
+
+    public static QuizResponse from (Quiz quiz, Long birthdayId, List<QuestionResponse> questions) {
+        return QuizResponse.builder()
+                .quizId(quiz.getId())
+                .birthdayId(birthdayId)
+                .questions(questions)
+                .build();
+    }
 }

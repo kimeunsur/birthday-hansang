@@ -149,7 +149,6 @@ public class KakaoService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        //log.info("jsonNode: {}", jsonNode);
         String profileImageUrl = Objects.requireNonNull(jsonNode).get("profileImageURL").asText();
         userInfo.put("profileImageUrl", profileImageUrl);
         //log.info("image1: {}", userInfo.get("profileImageUrl"));

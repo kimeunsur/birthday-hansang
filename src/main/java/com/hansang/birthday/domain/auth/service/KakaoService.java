@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Objects;
 
 
 @Service
@@ -39,6 +40,7 @@ public class KakaoService {
         String accessToken = getAccessToken(code);
         HashMap<String, Object> userInfo = getKakaoUserInfo(accessToken);
         HashMap<String, Object> userInfo_addProfile = getKakaoUserInfo_profile(accessToken, userInfo);
+        //log.info("image2: {}", userInfo.get("profileImageUrl"));
         return authService.login(userInfo_addProfile);
     }
 
@@ -110,7 +112,6 @@ public class KakaoService {
         JsonNode profile = kakaoAccount.get("profile");
         Long kakaoId = jsonNode.get("id").asLong();
         String name = profile.get("nickname").asText();
-        //String profileImageUrl = profile.get("profile_image_url").asText();
         String birthday = kakaoAccount.get("birthday").asText();
         String birthyear = kakaoAccount.get("birthyear").asText();
 
@@ -118,7 +119,6 @@ public class KakaoService {
 
         userInfo.put("kakaoId", kakaoId);
         userInfo.put("name", name);
-        /* userInfo.put("profileImageUrl", profileImageUrl); */
         userInfo.put("birthday", birthDate);
 
         return userInfo;
@@ -149,8 +149,10 @@ public class KakaoService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        String profileImageUrl = jsonNode.get("profileImageURL").asText();
+        //log.info("jsonNode: {}", jsonNode);
+        String profileImageUrl = Objects.requireNonNull(jsonNode).get("profileImageURL").asText();
         userInfo.put("profileImageUrl", profileImageUrl);
+        //log.info("image1: {}", userInfo.get("profileImageUrl"));
         return userInfo;
 
     }

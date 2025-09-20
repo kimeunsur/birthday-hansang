@@ -65,13 +65,4 @@ public class AuthController {
         return ResponseEntity.ok(newAccessToken.withoutRefreshToken());
     }
 
-    @Hidden
-    @GetMapping("api/auth/test")
-    public String test(@AuthenticationPrincipal CustomUserDetails user) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("auth: {}", auth);
-        log.info("user:{}",user.getAuthorities());
-        return "hello,world!";
-    }
-
 }

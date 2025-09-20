@@ -4,10 +4,13 @@ import com.hansang.birthday.domain.birthday.domain.Birthday;
 import com.hansang.birthday.domain.birthday.domain.repository.BirthdayRepository;
 import com.hansang.birthday.domain.birthday.exception.BirthdayException;
 import com.hansang.birthday.domain.quiz.domain.Quiz;
+import com.hansang.birthday.domain.quiz.domain.repository.GuestQuizRepository;
 import com.hansang.birthday.domain.quiz.domain.repository.QuestionRepository;
 import com.hansang.birthday.domain.quiz.domain.repository.QuizRepository;
 import com.hansang.birthday.domain.quiz.dto.request.QuizRequest;
 import com.hansang.birthday.domain.quiz.dto.response.QuestionResponse;
+import com.hansang.birthday.domain.quiz.dto.response.QuizRankingResponse;
+import com.hansang.birthday.domain.quiz.dto.response.QuizRankingRow;
 import com.hansang.birthday.domain.quiz.dto.response.QuizResponse;
 import com.hansang.birthday.domain.quiz.exception.QuizException;
 import com.hansang.birthday.global.error.exception.ErrorCode;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,7 +28,7 @@ public class QuizService {
     private final BirthdayRepository birthdayRepository;
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
-
+    private final GuestQuizRepository guestQuizRepository;
     public QuizResponse createQuiz(QuizRequest request, Long userId) {
         Birthday birthday = birthdayRepository.findById(request.getBirthdayId())
                 .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
@@ -46,5 +50,35 @@ public class QuizService {
                 .orElseThrow(() -> new QuizException(ErrorCode.QUIZ_NOT_FOUND));
         List<QuestionResponse> questions = questionRepository.getQuestionByQuiz(quiz);
         return QuizResponse.from(quiz, quiz.getBirthday().getId(), questions);
+    }
+
+    public List<QuizRankingResponse> getRanking(Long quizId) {
+        List<QuizRankingRow> rows = guestQuizRepository.findBoardByQuizId(quizId);
+        List<QuizRankingResponse> result = new ArrayList<>(rows.size());
+
+        Integer prevCorrect = null;
+        int rank = 0;
+
+        for (int i = 0; i < rows.size(); i++) {
+            QuizRankingRow r = rows.get(i);
+
+            if (i == 0) {
+                rank = 1;
+            } else {
+                boolean same = r.getCorrectCount().equals(prevCorrect);
+                if (!same) rank++; // dense-rank
+            }
+
+            result.add(new QuizRankingResponse(
+                    rank,
+                    r.getGuestQuizId(),
+                    r.getNickName(),
+                    r.getCorrectCount(),
+                    r.getTotalCount()
+            ));
+            prevCorrect = r.getCorrectCount();
+        }
+
+        return result;
     }
 }

@@ -4,11 +4,14 @@ import com.hansang.birthday.domain.auth.userdetail.CustomUserDetails;
 import com.hansang.birthday.domain.birthday.dto.response.BirthdayResponse;
 import com.hansang.birthday.domain.birthday.service.BirthdayService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +23,8 @@ public class BirthdayController {
     @Operation(summary = "생일상 생성 API")
     @PostMapping("/create")
     public ResponseEntity<BirthdayResponse> createBirthday(
-            @AuthenticationPrincipal CustomUserDetails user) {
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
         BirthdayResponse response = birthdayService.createBirthday(user.getUserId());
         return ResponseEntity.ok(response);
     }
@@ -35,5 +39,21 @@ public class BirthdayController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "생일상 전체 조회 API")
+    @GetMapping("/get/all")
+    public ResponseEntity<List<BirthdayResponse>> getBirthday(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        List<BirthdayResponse> response = birthdayService.getAllBirthdays(user.getUserId());
+        return ResponseEntity.ok(response);
+    }
 
+    @Operation(summary = "생일상 삭제 API")
+    @DeleteMapping("/delete/{birthdayId}")
+    public ResponseEntity<Void> deleteBirthday(
+            @PathVariable("birthdayId") Long birthdayId
+    ) {
+        birthdayService.deleteBirthday(birthdayId);
+        return ResponseEntity.noContent().build();
+    }
 }

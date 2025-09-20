@@ -21,7 +21,4 @@ public class JwtConfig {
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
 
-
-
-
 }

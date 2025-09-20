@@ -10,6 +10,7 @@ import com.hansang.birthday.domain.quiz.domain.repository.QuizResponseContentRep
 import com.hansang.birthday.domain.quiz.domain.repository.QuizResponseRepository;
 import com.hansang.birthday.domain.quiz.dto.request.GuestQuestionRequest;
 import com.hansang.birthday.domain.quiz.dto.response.GuestQuizResultResponse;
+import com.hansang.birthday.domain.quiz.dto.response.QuizRankingResponse;
 import com.hansang.birthday.domain.quiz.exception.QuizException;
 import com.hansang.birthday.global.error.exception.ErrorCode;
 import jakarta.transaction.Transactional;
@@ -28,10 +29,12 @@ public class GuestQuizService {
     private final QuizResponseContentRepository quizResponseContentRepository;
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
+    private final QuizService quizService;
 
     @Transactional
     public GuestQuizResultResponse registerQuiz(String nickname, Long quizId, List<GuestQuestionRequest> reqs) {
 
+        //결과 저장하기
         Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new QuizException(ErrorCode.QUIZ_NOT_FOUND));
         int score=0;
         GuestQuiz guestQuiz = GuestQuiz.of(nickname, quiz);
@@ -50,7 +53,10 @@ public class GuestQuizService {
         guestQuiz.updateScore(score);
         quizResponseRepository.save(guestQuiz);
 
-        return GuestQuizResultResponse.of(guestQuiz.getGuestQuizId(), score);
+        //랭킹 조회하기
+        List<QuizRankingResponse> ranking = quizService.getRanking(quizId);
+
+        return GuestQuizResultResponse.of(guestQuiz.getGuestQuizId(), score, ranking);
 
     }
 

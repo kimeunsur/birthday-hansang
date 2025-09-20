@@ -5,22 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
 public class GuestQuizResultResponse {
-    //내 quiz_response_id
     private Long guestQuizId;
-
-    //내 점수
     private int score;
+    private List<QuizRankingResponse> ranking;
 
-    public static GuestQuizResultResponse of(Long guestQuizId, int score) {
+    public static GuestQuizResultResponse of(Long guestQuizId, int score, List<QuizRankingResponse> ranking) {
         return GuestQuizResultResponse.builder()
                 .guestQuizId(guestQuizId)
                 .score(score)
+                .ranking(ranking)
                 .build();
     }
-    //순위 퀴즈 View 담기
-    //private int rank;
+
 }

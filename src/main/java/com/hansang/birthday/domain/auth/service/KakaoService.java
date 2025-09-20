@@ -40,6 +40,7 @@ public class KakaoService {
         String accessToken = getAccessToken(code);
         HashMap<String, Object> userInfo = getKakaoUserInfo(accessToken);
         HashMap<String, Object> userInfo_addProfile = getKakaoUserInfo_profile(accessToken, userInfo);
+        //log.info("image2: {}", userInfo.get("profileImageUrl"));
         return authService.login(userInfo_addProfile);
     }
 
@@ -150,6 +151,7 @@ public class KakaoService {
         }
         String profileImageUrl = Objects.requireNonNull(jsonNode).get("profileImageURL").asText();
         userInfo.put("profileImageUrl", profileImageUrl);
+        //log.info("image1: {}", userInfo.get("profileImageUrl"));
         return userInfo;
 
     }

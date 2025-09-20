@@ -25,7 +25,17 @@ public class SwaggerConfig {
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
                 .group("user")
-                .pathsToMatch("/api-user/**")
+                .pathsToMatch("/api-user/**","/api/auth-user/**")
+                .addOpenApiCustomizer(openApi -> openApi
+                        .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME)))
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi guestApi() {
+        return GroupedOpenApi.builder()
+                .group("guest")
+                .pathsToMatch("/api-guest/**","/api/auth-guest/**")
                 .addOpenApiCustomizer(openApi -> openApi
                         .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME)))
                 .build();

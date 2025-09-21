@@ -1,4 +1,4 @@
-name: Build & Deploy Single Container
+name: Build & Deploy Birthday HanSang
 
 on:
   pull_request:
@@ -25,14 +25,15 @@ jobs:
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      # Docker 이미지 빌드 및 푸시
       - name: Build & Push Image
         run: |
           docker build -t ${IMAGE}:${GIT_SHA} -t ${IMAGE}:latest .
           docker push ${IMAGE}:${GIT_SHA}
           docker push ${IMAGE}:latest
 
-      # 서버에서 새 이미지 pull + 컨테이너 교체
-      - name: Deploy on EC2 (compose)
+      # 서버에 배포
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -41,6 +42,18 @@ jobs:
           script: |
             set -e
             cd /home/ec2-user/BirthDay-HanSang
-            docker compose -f docker-compose.yml pull
-            docker compose -f docker-compose.yml up -d --remove-orphans
+            
+            # Docker 로그인
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            # 새 이미지 pull 및 컨테이너 재시작
+            docker compose pull app
+            docker compose up -d --remove-orphans
+            
+            # 사용하지 않는 Docker 이미지 정리
             docker image prune -f || true
+            
+            # 배포 완료 확인
+            sleep 10
+            docker compose ps
+            curl -f https://birthday-hansang.com/actuator/health || echo "Health check failed"

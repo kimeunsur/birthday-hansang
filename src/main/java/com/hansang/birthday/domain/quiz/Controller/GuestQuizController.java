@@ -8,7 +8,6 @@ import com.hansang.birthday.domain.quiz.service.GuestQuizService;
 import com.hansang.birthday.domain.quiz.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ public  class GuestQuizController {
     private final GuestQuizService guestQuizService;
     private final QuizService quizService;
 
-    //방문자 퀴즈 랭킹 보기 api 추가하기
     @Operation(summary = "게스트 퀴즈 랭킹 조회 API")
     @GetMapping("/get/ranking/{quizId}")
     public ResponseEntity<List<QuizRankingResponse>> getRankingQuiz (
@@ -38,7 +36,6 @@ public  class GuestQuizController {
         return ResponseEntity.ok(response);
     }
 
-    //방문자 퀴즈 문항 보기 api 추가하기
     @Operation(summary = "게스트 퀴즈 문항 조회 API")
     @GetMapping("/get/{quizId}")
     public ResponseEntity<QuizResponse> getQuiz (

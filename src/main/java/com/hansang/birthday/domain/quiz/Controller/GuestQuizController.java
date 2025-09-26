@@ -35,7 +35,7 @@ public  class GuestQuizController {
         List<QuizRankingResponse> response = quizService.getRanking(quizId);
         return ResponseEntity.ok(response);
     }
-
+  
     @Operation(summary = "게스트 퀴즈 문항 조회 API")
     @GetMapping("/get/{quizId}")
     public ResponseEntity<QuizResponse> getQuiz (

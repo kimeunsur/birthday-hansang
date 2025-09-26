@@ -29,7 +29,6 @@ public class Image extends BaseEntity {
     private ImageType type;
     @Builder
     public Image(String url, ImageType type) {
-
         this.url = url;
         this.type = type;
     }

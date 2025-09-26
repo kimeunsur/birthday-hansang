@@ -25,6 +25,8 @@ public class Quiz extends BaseEntity {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sequence ASC")
     private List<Question> questions = new ArrayList<>();
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GuestQuiz> guestQuizzes = new ArrayList<>();
 
     @Builder
     public Quiz (Birthday birthday, List<Question> questions) {

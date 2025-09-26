@@ -66,6 +66,6 @@ public class BirthdayService {
     public void deleteBirthday(Long birthdayId) {
         Birthday birthday = birthdayRepository.findById(birthdayId)
                 .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
-        birthdayRepository.deleteById(birthdayId);
+        birthdayRepository.delete(birthday);
     }
 }

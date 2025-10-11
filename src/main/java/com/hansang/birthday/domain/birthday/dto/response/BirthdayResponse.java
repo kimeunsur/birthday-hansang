@@ -16,6 +16,7 @@ public class BirthdayResponse {
     private Long birthdayId;
     private String code;
     private List<BirthdayCardResponse> birthdayCards;
+    private boolean isVisible;
 
     public static BirthdayResponse of (Long userId, Birthday birthday) {
         return BirthdayResponse.builder()
@@ -26,6 +27,7 @@ public class BirthdayResponse {
                         birthday.getBirthdayCards().stream()
                                 .map(BirthdayCardResponse::of)
                                 .toList())
+                .isVisible(birthday.getIsVisible())
                 .build();
     }
 }

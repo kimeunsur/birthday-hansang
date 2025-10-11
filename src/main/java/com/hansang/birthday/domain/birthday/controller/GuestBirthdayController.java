@@ -1,11 +1,10 @@
 package com.hansang.birthday.domain.birthday.controller;
 
 
-import com.hansang.birthday.domain.birthday.dto.response.BirthdayResponse;
+import com.hansang.birthday.domain.birthday.dto.response.GuestBirthdayResponse;
 import com.hansang.birthday.domain.birthday.service.BirthdayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +23,13 @@ public class GuestBirthdayController {
 
     @Operation(summary = "게스트 생일상 조회")
     @GetMapping()
-    public ResponseEntity<BirthdayResponse> getBirthday(
+    public ResponseEntity<GuestBirthdayResponse> getBirthday(
             @Parameter(
                     description = "Authorization 헤더를 통해 전달된 게스트 JWT 토큰에서 추출된 정보",
                     hidden = true
             )
             @AuthenticationPrincipal Jwt jwt) {
-        BirthdayResponse response = birthdayService.getBirthdayInfoByBirthdayId(jwt.getClaim("birthdayId"));
+        GuestBirthdayResponse response = birthdayService.getBirthdayInfoByBirthdayId(jwt.getClaim("birthdayId"));
         return ResponseEntity.ok(response);
     }
 

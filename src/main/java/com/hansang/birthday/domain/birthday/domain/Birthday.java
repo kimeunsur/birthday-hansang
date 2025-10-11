@@ -38,18 +38,21 @@ public class Birthday extends BaseEntity {
     private String code;
     @OneToMany(mappedBy = "birthday", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BirthdayCard> birthdayCards = new ArrayList<>();
+    @Column(name = "is_visible")
+    private Boolean isVisible;
 
     @Builder
-    public Birthday (Boolean brandGiftEntry, Integer year, Boolean quizEntry, Boolean isOpen, User user, String code) {
+    public Birthday (Boolean brandGiftEntry, Integer year, Boolean quizEntry, Boolean isOpen, User user, String code, Boolean isVisible) {
         this.brandGiftEntry = brandGiftEntry == null ? false : brandGiftEntry;
         this.year = year;
         this.quizEntry = quizEntry ==null ? false : quizEntry;
         this.isOpen = isOpen == null ? false : isOpen;
         this.user = user;
         this.code = code;
+        this.isVisible = isVisible == null ? true : isVisible;
     }
     public static Birthday of (Integer year, User user, String code) {
-        return new Birthday(null, year, null, null, user, code);
+        return new Birthday(null, year, null, null, user, code, null);
     }
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;

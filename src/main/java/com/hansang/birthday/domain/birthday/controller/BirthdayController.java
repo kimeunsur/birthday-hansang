@@ -1,8 +1,10 @@
 package com.hansang.birthday.domain.birthday.controller;
 
 import com.hansang.birthday.domain.auth.userdetail.CustomUserDetails;
+import com.hansang.birthday.domain.birthday.dto.request.BirthdayVisibilityRequest;
 import com.hansang.birthday.domain.birthday.dto.response.BirthdayPeriodResponse;
 import com.hansang.birthday.domain.birthday.dto.response.BirthdayResponse;
+import com.hansang.birthday.domain.birthday.dto.response.BirthdayVisibilityResponse;
 import com.hansang.birthday.domain.birthday.service.BirthdayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -64,6 +66,16 @@ public class BirthdayController {
             @PathVariable("birthdayId") Long birthdayId
     ) {
         BirthdayPeriodResponse response = birthdayService.getBirthdayPeriod(user.getUserId(), birthdayId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "생일상 공개여부 설정 API")
+    @PatchMapping("/visible/{birthdayId}")
+    public ResponseEntity<BirthdayVisibilityResponse> updateVisibility (
+            @PathVariable("birthdayId") Long birthdayId,
+            @RequestBody BirthdayVisibilityRequest request
+    ) {
+        BirthdayVisibilityResponse response = birthdayService.updateVisibility(request, birthdayId);
         return ResponseEntity.ok(response);
     }
 }

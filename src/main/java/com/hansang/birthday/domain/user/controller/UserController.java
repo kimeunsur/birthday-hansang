@@ -25,8 +25,8 @@ public class UserController {
         return ResponseEntity.ok(userInformation);
     }
 
-    @PatchMapping("/me/nickname")
     @Operation(summary = "닉네임 변경 API", description = "로그인한 사용자의 닉네임을 수정")
+    @PatchMapping("/me/nickname")
     public ResponseEntity<Void> changeNickname(
             @AuthenticationPrincipal CustomUserDetails user,
             @Parameter(description = "변경할 닉네임 정보", required = true)

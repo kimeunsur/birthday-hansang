@@ -61,4 +61,6 @@ public class Birthday extends BaseEntity {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public void setVisible(Boolean isVisible) {this.isVisible = isVisible;}
 }

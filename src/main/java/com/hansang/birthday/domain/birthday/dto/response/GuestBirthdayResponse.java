@@ -28,7 +28,7 @@ public class GuestBirthdayResponse {
                         birthday.getBirthdayCards().stream().map(
                                 card -> {
                                     BirthdayCardResponse response = BirthdayCardResponse.of(card);
-                                    if (isVisible) {
+                                    if (!isVisible) {
                                         return BirthdayCardResponse.builder()
                                                 .birthdayCardId((response.getBirthdayCardId()))
                                                 .message(null)

@@ -2,8 +2,10 @@ package com.hansang.birthday.domain.birthday.service;
 
 import com.hansang.birthday.domain.birthday.domain.Birthday;
 import com.hansang.birthday.domain.birthday.domain.repository.BirthdayRepository;
+import com.hansang.birthday.domain.birthday.dto.request.BirthdayVisibilityRequest;
 import com.hansang.birthday.domain.birthday.dto.response.BirthdayPeriodResponse;
 import com.hansang.birthday.domain.birthday.dto.response.BirthdayResponse;
+import com.hansang.birthday.domain.birthday.dto.response.BirthdayVisibilityResponse;
 import com.hansang.birthday.domain.birthday.dto.response.GuestBirthdayResponse;
 import com.hansang.birthday.domain.birthday.exception.BirthdayException;
 import com.hansang.birthday.domain.user.domain.User;
@@ -76,5 +78,12 @@ public class BirthdayService {
         Birthday birthday = birthdayRepository.findById(birthdayId)
                 .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
         return BirthdayPeriodResponse.of(birthday, user);
+    }
+
+    public BirthdayVisibilityResponse updateVisibility(BirthdayVisibilityRequest request, Long birthdayId) {
+        Birthday birthday = birthdayRepository.findById(birthdayId)
+                .orElseThrow(() -> new BirthdayException(ErrorCode.BIRTHDAY_NOT_FOUND));
+        birthday.setVisible(request.getIsVisible());
+        return BirthdayVisibilityResponse.of(birthday);
     }
 }

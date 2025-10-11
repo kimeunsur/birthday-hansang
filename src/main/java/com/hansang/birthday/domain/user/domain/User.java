@@ -62,10 +62,12 @@ public class User {
                 .birthday(birthday)
                 .build();
     }
-    public void updateUser(String name, String profileImageUrl, LocalDate birthday) {
-        this.name = name;
+    public void updateUser(String profileImageUrl, LocalDate birthday) {
         this.profileImageUrl = profileImageUrl;
         this.birthday = birthday;
+    }
+    public void updateNickname(String nickname) {
+        this.name = nickname;
     }
 
     public void deleteRefreshToken() {

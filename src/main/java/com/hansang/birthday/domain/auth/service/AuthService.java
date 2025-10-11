@@ -35,9 +35,7 @@ public class AuthService {
 
         User user = userRepository.findByKakaoId(kakaoId)
                 .map(u -> {
-                    //log.info("before={}, after={}", u.getProfileImageUrl(), profileImageUrl);
-                    u.updateUser(name,profileImageUrl,birthday); //기존 유저 => 프로필 갱신
-                    //userRepository.flush();
+                    u.updateUser(profileImageUrl,birthday); //기존 유저 => 프로필 갱신
                     return u;})
                 .orElseGet(()-> {
                     return userRepository.save(User.of(kakaoId, name, profileImageUrl, birthday)); //신규 유저 => 저장

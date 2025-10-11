@@ -1,10 +1,10 @@
 package com.hansang.birthday.domain.birthday.controller;
 
 import com.hansang.birthday.domain.auth.userdetail.CustomUserDetails;
+import com.hansang.birthday.domain.birthday.dto.response.BirthdayPeriodResponse;
 import com.hansang.birthday.domain.birthday.dto.response.BirthdayResponse;
 import com.hansang.birthday.domain.birthday.service.BirthdayService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +55,15 @@ public class BirthdayController {
     ) {
         birthdayService.deleteBirthday(birthdayId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "생일상 공개기간 조회 API")
+    @GetMapping("/get/period/{birthdayId}")
+    public ResponseEntity<BirthdayPeriodResponse> getBirthdayPeriod(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @PathVariable("birthdayId") Long birthdayId
+    ) {
+        BirthdayPeriodResponse response = birthdayService.getBirthdayPeriod(user.getUserId(), birthdayId);
+        return ResponseEntity.ok(response);
     }
 }

@@ -68,4 +68,5 @@ jobs:
             curl -f https://birthday-hansang.com/actuator/health || {
               echo "Health check failed"
               docker compose logs app
-              exit 1}
+              exit 1
+            }

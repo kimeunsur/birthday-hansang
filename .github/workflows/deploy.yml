@@ -61,4 +61,3 @@ jobs:
             # 새 이미지 pull 및 컨테이너 재시작
             docker compose pull app
             docker compose up -d --remove-orphans
-

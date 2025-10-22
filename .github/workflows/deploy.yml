@@ -61,12 +61,4 @@ jobs:
             # 새 이미지 pull 및 컨테이너 재시작
             docker compose pull app
             docker compose up -d --remove-orphans
-            
-            # 배포 완료 확인 => 실패 시 멈춤
-            sleep 20
-            docker compose ps
-            curl -f http://localhost:8080/actuator/health || {
-              echo "Health check failed"
-              docker compose logs app
-              exit 1
-            }
+

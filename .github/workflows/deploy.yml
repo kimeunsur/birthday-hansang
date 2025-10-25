@@ -22,9 +22,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. GHCR 로그인
+      # 2. GHCR 로그인 (레포 소유자 계정 고정)
       - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: |
+          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u kimeunsur --password-stdin
 
       # 3. Buildx 설정
       - name: Set up Docker Buildx

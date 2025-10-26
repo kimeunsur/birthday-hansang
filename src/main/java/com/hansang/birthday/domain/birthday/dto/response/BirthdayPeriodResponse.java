@@ -17,10 +17,11 @@ public class BirthdayPeriodResponse {
     private LocalDate endTime;
 
     public static BirthdayPeriodResponse of(Birthday birthday, User user) {
+        LocalDate birthdayThisYear = user.getBirthday().withYear(LocalDate.now().getYear());
         return BirthdayPeriodResponse.builder()
                 .birthdayId(birthday.getId())
-                .startTime(user.getBirthday().minusDays(14))
-                .endTime(user.getBirthday())
+                .startTime(birthdayThisYear.minusDays(14))
+                .endTime(birthdayThisYear)
                 .build();
 
     }

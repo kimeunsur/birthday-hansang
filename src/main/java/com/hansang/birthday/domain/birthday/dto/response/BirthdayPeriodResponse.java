@@ -18,9 +18,11 @@ public class BirthdayPeriodResponse {
 
     public static BirthdayPeriodResponse of(Birthday birthday, User user) {
         LocalDate birthdayThisYear = user.getBirthday().withYear(LocalDate.now().getYear());
+        LocalDate birthdayLastYear = birthdayThisYear.minusYears(1);
         return BirthdayPeriodResponse.builder()
                 .birthdayId(birthday.getId())
-                .startTime(birthdayThisYear.minusDays(14))
+                //.startTime(birthdayThisYear.minusDays(14))
+                .startTime(birthdayLastYear)
                 .endTime(birthdayThisYear)
                 .build();
 

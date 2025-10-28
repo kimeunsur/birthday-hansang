@@ -5,6 +5,7 @@ import com.hansang.birthday.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -17,13 +18,16 @@ public class BirthdayPeriodResponse {
     private LocalDate endTime;
 
     public static BirthdayPeriodResponse of(Birthday birthday, User user) {
-        LocalDate birthdayThisYear = user.getBirthday().withYear(LocalDate.now().getYear());
-        LocalDate birthdayLastYear = birthdayThisYear.minusYears(1);
+        LocalDate today = LocalDate.now();
+        LocalDate birthdayThisYear = user.getBirthday().withYear(today.getYear());
+        LocalDate startTime = LocalDate.of(today.getYear(), 1, 1);
+        LocalDate endTime = birthdayThisYear;
         return BirthdayPeriodResponse.builder()
                 .birthdayId(birthday.getId())
                 //.startTime(birthdayThisYear.minusDays(14))
-                .startTime(birthdayLastYear)
-                .endTime(birthdayThisYear)
+                .startTime(startTime)
+                //.endTime(birthdayThisYear)
+                .endTime(endTime)
                 .build();
 
     }

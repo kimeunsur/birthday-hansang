@@ -28,7 +28,7 @@ public class ImageViewController {
                     hidden = true
             )
             @AuthenticationPrincipal Jwt jwt) {
-        List<ImageResponse> allImage = imageService.getAllImage();
+        List<ImageResponse> allImage = imageService.getAllCardImage();
         return ResponseEntity.ok(allImage);
     }
 }

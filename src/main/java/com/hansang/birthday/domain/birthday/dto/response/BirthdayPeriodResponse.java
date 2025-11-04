@@ -19,14 +19,12 @@ public class BirthdayPeriodResponse {
 
     public static BirthdayPeriodResponse of(Birthday birthday, User user) {
         LocalDate today = LocalDate.now();
-        LocalDate birthdayThisYear = user.getBirthday().withYear(today.getYear());
+        int year = today.getYear();
         LocalDate startTime = LocalDate.of(today.getYear(), 1, 1);
-        LocalDate endTime = birthdayThisYear;
+        LocalDate endTime   = LocalDate.of(year, 12, 31);
         return BirthdayPeriodResponse.builder()
                 .birthdayId(birthday.getId())
-                //.startTime(birthdayThisYear.minusDays(14))
                 .startTime(startTime)
-                //.endTime(birthdayThisYear)
                 .endTime(endTime)
                 .build();
 

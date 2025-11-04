@@ -1,5 +1,6 @@
 package com.hansang.birthday.domain.image.service;
 
+import com.hansang.birthday.domain.image.domain.ImageType;
 import com.hansang.birthday.domain.image.domain.repository.ImageRepository;
 import com.hansang.birthday.domain.image.dto.response.ImageResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
+    public List<ImageResponse> getAllCardImage() {
+        return imageRepository.findImageByType(ImageType.CARD)
+                .stream()
+                .map(ImageResponse::of)
+                .collect(Collectors.toList());
+    }
 
     public List<ImageResponse> getAllImage() {
         return imageRepository.findAll()

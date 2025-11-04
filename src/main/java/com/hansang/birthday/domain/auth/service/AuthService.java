@@ -5,6 +5,8 @@ import com.hansang.birthday.domain.auth.jwt.JwtTokenProvider;
 import com.hansang.birthday.domain.auth.tokens.AuthTokens;
 import com.hansang.birthday.domain.auth.tokens.AuthTokensGenerator;
 import com.hansang.birthday.domain.auth.util.RefreshTokenExtractor;
+import com.hansang.birthday.domain.birthday.domain.repository.BirthdayRepository;
+import com.hansang.birthday.domain.quiz.domain.repository.QuizRepository;
 import com.hansang.birthday.domain.user.domain.User;
 import com.hansang.birthday.domain.user.repository.UserRepository;
 import com.hansang.birthday.global.error.exception.BusinessException;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -25,9 +28,12 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthTokensGenerator authTokensGenerator;
     private final JwtTokenProvider jwtTokenProvider;
+    private final BirthdayRepository birthdayRepository;
+    private final QuizRepository quizRepository;
 
     @Transactional
     public LoginResponse login(HashMap<String, Object> userInfo) {
+        int currentYear = LocalDate.now().getYear();
         long kakaoId = Long.parseLong(userInfo.get("kakaoId").toString());
         String name = userInfo.get("name").toString();
         String profileImageUrl = userInfo.get("profileImageUrl").toString();
@@ -45,7 +51,10 @@ public class AuthService {
         AuthTokens token = authTokensGenerator.generate(user.getUserId().toString());
         user.updateRefreshToken(token.getRefreshToken());
 
-        return new LoginResponse(user.getUserId(), token);
+        Long birthdayId = birthdayRepository.findIdByUserIdAndYear(user.getUserId(), currentYear).orElse(null);
+        Long quizId = quizRepository.findIdByUserIdAndYear(user.getUserId(), currentYear).orElse(null);
+
+        return new LoginResponse(user.getUserId(), token, birthdayId, quizId);
     }
 
     public void logout(HttpServletRequest request) {

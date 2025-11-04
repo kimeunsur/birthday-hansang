@@ -7,6 +7,8 @@ import com.hansang.birthday.domain.auth.tokens.TokenCookieUtil;
 import com.hansang.birthday.domain.auth.dto.response.LoginResponse;
 import com.hansang.birthday.domain.auth.service.KakaoService;
 import com.hansang.birthday.domain.auth.userdetail.CustomUserDetails;
+import com.hansang.birthday.domain.birthday.domain.repository.BirthdayRepository;
+import com.hansang.birthday.domain.quiz.domain.repository.QuizRepository;
 import com.hansang.birthday.global.error.exception.BusinessException;
 import com.hansang.birthday.global.error.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -37,6 +39,7 @@ public class AuthController {
     private final KakaoService kakaoService;
     private final AuthService authService;
 
+
     @Operation(
             summary = "카카오 소셜 로그인 API",
             description = "카카오 OAuth 인증 코드를 받아 사용자 로그인을 처리하고 JWT 토큰을 발급 " +
@@ -49,11 +52,14 @@ public class AuthController {
             LoginResponse fullResponse = kakaoService.kakaoLogin(request.getCode());
             ResponseCookie responseCookie = TokenCookieUtil.createRefreshTokenCookie(
                     fullResponse.getAuthToken().getRefreshToken());
+
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE,responseCookie.toString())
                     .body(new LoginResponse(
                             fullResponse.getUserId(),
-                            fullResponse.getAuthToken().withoutRefreshToken()));
+                            fullResponse.getAuthToken().withoutRefreshToken(),
+                            fullResponse.getBirthdayId(),
+                            fullResponse.getQuizId()));
         }catch(NoSuchElementException e){
             throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
         }

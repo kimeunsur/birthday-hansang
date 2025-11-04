@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GuestQuizService {
     private final QuizResponseRepository quizResponseRepository;
-    private final QuizResponseContentRepository quizResponseContentRepository;
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
     private final QuizService quizService;

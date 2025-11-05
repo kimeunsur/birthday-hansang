@@ -32,5 +32,6 @@ public class GuestAuthController {
             @RequestBody GuestRequest guestRequest) {
         AuthTokens guestToken = guestAuthService.generateGuestToken(guestRequest);
         return ResponseEntity.ok(guestToken);
+
     }
 }

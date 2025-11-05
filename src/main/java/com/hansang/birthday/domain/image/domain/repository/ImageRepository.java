@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
     Optional<Image> findImageByUrl(String url);
-    Optional<Image> findImageByType(ImageType type);
 
+    List<Image> findAllByType(ImageType type);
 }
 

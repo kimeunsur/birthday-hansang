@@ -52,7 +52,7 @@ public class Birthday extends BaseEntity {
         this.isVisible = isVisible == null ? true : isVisible;
     }
     public static Birthday of (Integer year, User user, String code) {
-        return new Birthday(null, year, null, null, user, code, null);
+        return new Birthday(null, year, null, true, user, code, null);
     }
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;

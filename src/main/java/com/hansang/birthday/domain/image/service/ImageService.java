@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ImageService {
     private final ImageRepository imageRepository;
     public List<ImageResponse> getAllCardImage() {
-        return imageRepository.findImageByType(ImageType.CARD)
+        return imageRepository.findAllByType(ImageType.CARD)
                 .stream()
                 .map(ImageResponse::of)
                 .collect(Collectors.toList());

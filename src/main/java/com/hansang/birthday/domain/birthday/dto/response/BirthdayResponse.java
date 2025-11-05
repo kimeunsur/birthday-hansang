@@ -14,6 +14,7 @@ import java.util.List;
 public class BirthdayResponse {
     private Long userId;
     private Long birthdayId;
+    private Integer year;
     private String code;
     private List<BirthdayCardResponse> birthdayCards;
     private boolean isVisible;
@@ -22,6 +23,7 @@ public class BirthdayResponse {
         return BirthdayResponse.builder()
                 .userId(userId)
                 .birthdayId(birthday.getId())
+                .year(birthday.getYear())
                 .code(birthday.getCode())
                 .birthdayCards(
                         birthday.getBirthdayCards().stream()

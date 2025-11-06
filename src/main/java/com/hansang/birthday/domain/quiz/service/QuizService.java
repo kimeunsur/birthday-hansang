@@ -58,15 +58,13 @@ public class QuizService {
 
         Integer prevCorrect = null;
         int rank = 0;
+        int position = 0;
 
-        for (int i = 0; i < rows.size(); i++) {
-            QuizRankingRow r = rows.get(i);
+        for (QuizRankingRow r : rows) {
+            position++;
 
-            if (i == 0) {
-                rank = 1;
-            } else {
-                boolean same = r.getCorrectCount().equals(prevCorrect);
-                if (!same) rank++; // dense-rank
+            if (prevCorrect == null || !r.getCorrectCount().equals(prevCorrect)) {
+                rank = position;
             }
 
             result.add(new QuizRankingResponse(
@@ -76,6 +74,7 @@ public class QuizService {
                     r.getCorrectCount(),
                     r.getTotalCount()
             ));
+
             prevCorrect = r.getCorrectCount();
         }
 
